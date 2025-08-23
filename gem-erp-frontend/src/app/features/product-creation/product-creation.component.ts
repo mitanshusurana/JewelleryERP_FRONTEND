@@ -1,13 +1,63 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatStepperModule } from '@angular/material/stepper';
+import { NgxScannerQrcodeModule, NgxScannerQrcodeComponent, ScannerQRCodeResult } from 'ngx-scanner-qrcode';
+
+// Define an enum for our product types for type safety
+export enum ProductType {
+  LooseGemstone = 'LOOSE_GEMSTONE',
+  FinishedJewelry = 'FINISHED_JEWELRY',
+  IdolCarving = 'IDOL_CARVING'
+}
 
 @Component({
   selector: 'app-product-creation',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatStepperModule,
+    NgxScannerQrcodeModule // Import the scanner module
+  ],
   templateUrl: './product-creation.component.html',
   styleUrls: ['./product-creation.component.scss']
 })
-export class ProductCreationComponent {
-  // We will build out the logic for this component in the next steps.
+export class ProductCreationComponent implements AfterViewInit {
+  // Get a reference to the scanner component in the template
+  @ViewChild('action') scanner!: NgxScannerQrcodeComponent;
+
+  // State management for the workflow
+  qrCodeScanned = false;
+  scannedQrCode: string | null = null;
+  productTypeSelected: ProductType | null = null;
+
+  // Expose the enum to the template
+  ProductType = ProductType;
+
+  // This lifecycle hook runs after the view is initialized
+  ngAfterViewInit(): void {
+    // We can start the scanner automatically here if we want
+    this.scanner.start();
+  }
+
+  // This function is called by the scanner component when a QR code is successfully read
+  onQrCodeScanned(result: ScannerQRCodeResult[]): void {
+    const qrCode = result[0].value;
+    this.scannedQrCode = qrCode;
+    this.qrCodeScanned = true;
+    console.log(`QR Code Scanned: ${this.scannedQrCode}`);
+    // Stop the scanner and camera once we have a result
+    this.scanner.stop();
+  }
+
+  // Function to handle the selection of a product type
+  selectProductType(type: ProductType): void {
+    this.productTypeSelected = type;
+    console.log(`Product Type Selected: ${this.productTypeSelected}`);
+  }
 }

@@ -1,4 +1,51 @@
-<h2>Digitize New Product</h2>
-<p>
-  The workflow for scanning a QR code, selecting the product type, and filling out the dynamic form will be built here.
-</p>
+<div class="workflow-container">
+  <mat-card class="workflow-card">
+    <mat-card-header>
+      <mat-card-title>Digitize New Product</mat-card-title>
+      <mat-card-subtitle>Follow the steps to add a new item to your inventory.</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+
+      <!-- Step 1: Scan QR Code -->
+      <div class="step" *ngIf="!qrCodeScanned">
+        <h3>Step 1: Scan Product QR Code</h3>
+        <p>Point your device's camera at the QR code tag attached to the product.</p>
+
+        <!-- Real QR Scanner Component -->
+        <div class="scanner-container">
+          <ngx-scanner-qrcode #action="scanner" (event)="onQrCodeScanned($event)"></ngx-scanner-qrcode>
+        </div>
+      </div>
+
+      <!-- Step 2: Select Product Type -->
+      <div class="step" *ngIf="qrCodeScanned && !productTypeSelected">
+        <h3>Step 2: Select Product Type</h3>
+        <p>You scanned QR Code: <strong>{{ scannedQrCode }}</strong>. Now, what kind of item is this?</p>
+        <div class="type-selection">
+          <button mat-stroked-button (click)="selectProductType(ProductType.LooseGemstone)">
+            <mat-icon>diamond</mat-icon>
+            <span>Loose Gemstone</span>
+          </button>
+          <button mat-stroked-button (click)="selectProductType(ProductType.FinishedJewelry)">
+            <mat-icon>ring_volume</mat-icon>
+            <span>Finished Jewelry</span>
+          </button>
+          <button mat-stroked-button (click)="selectProductType(ProductType.IdolCarving)">
+            <mat-icon>sculpture</mat-icon> <!-- Placeholder icon -->
+            <span>Idol / Carving</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 3: Dynamic Form (Placeholder) -->
+      <div class="step" *ngIf="productTypeSelected">
+        <h3>Step 3: Enter Details</h3>
+        <p>
+          You have selected <strong>{{ productTypeSelected }}</strong>.
+          The dynamic form for this product type will appear here.
+        </p>
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,57 @@
+# =================================================================================
+# .gitignore for Angular CLI Projects
+# =================================================================================
+
+# Compiled output
+/dist/
+/tmp/
+/out-tsc/
+
+# Node packages
+/node_modules/
+
+# Angular cache files
+/.angular/
+
+# IDE configuration files
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# VS Code specific
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Log files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Test results
+/coverage/
+/junit/
+/e2e/videos/
+/e2e/screenshots/
+
+# Environment files with secrets (best practice)
+src/environments/environment.*.ts
+!src/environments/environment.ts
+!src/environments/environment.prod.ts

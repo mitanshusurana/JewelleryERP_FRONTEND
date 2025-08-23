@@ -1,0 +1,15 @@
+<mat-toolbar color="primary">
+  <mat-icon>diamond</mat-icon>
+  <span>{{ title }}</span>
+  <span class="spacer"></span>
+  <a mat-button routerLink="/dashboard">Dashboard</a>
+  <a mat-raised-button color="accent" routerLink="/new-product">
+    <mat-icon>add</mat-icon>
+    Add New Product
+  </a>
+</mat-toolbar>
+
+<main class="content">
+  <!-- The routed component will be displayed here -->
+  <router-outlet></router-outlet>
+</main>

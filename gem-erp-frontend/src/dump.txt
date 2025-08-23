@@ -1,0 +1,201 @@
+
+
+// =================================================================================
+// File: src/environments/environment.ts
+// Purpose: Configuration for the development environment.
+// IMPORTANT: Update the apiUrl to point to your backend.
+// =================================================================================
+export const environment = {
+    production: false,
+    apiUrl: 'http://localhost:8080/api/v1' // Your backend API Gateway URL
+};
+
+
+// =================================================================================
+// File: src/app/app.config.ts
+// Purpose: Main application configuration for standalone components (modern Angular).
+// =================================================================================
+import { ApplicationConfig } from '@angular/core';
+import { provideRouter } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { routes } from './app.routes';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideRouter(routes),
+    provideAnimations(),
+    provideHttpClient() // Enable HttpClient for API calls
+  ]
+};
+
+
+// =================================================================================
+// File: src/app/app.routes.ts
+// Purpose: Defines the main application routing.
+// =================================================================================
+import { Routes } from '@angular/router';
+
+export const routes: Routes = [
+    // Default route redirects to the dashboard
+    { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+    // Lazy-load the product creation feature when the user navigates to '/new-product'
+    {
+        path: 'new-product',
+        loadComponent: () => import('./features/product-creation/product-creation.component')
+                           .then(m => m.ProductCreationComponent)
+    },
+    // TODO: Add a dashboard component
+    // { path: 'dashboard', component: DashboardComponent }
+];
+
+
+// =================================================================================
+// File: src/app/app.component.ts
+// Purpose: The root component of the application (the main shell).
+// =================================================================================
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterOutlet, RouterLink } from '@angular/router';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterOutlet,
+    RouterLink,
+    MatToolbarModule,
+    MatButtonModule,
+    MatIconModule
+  ],
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
+})
+export class AppComponent {
+  title = 'Gemstone ERP';
+}
+
+
+// =================================================================================
+// File: src/app/app.component.html
+// Purpose: The main HTML template for the application shell.
+// =================================================================================
+`
+<mat-toolbar color="primary">
+  <mat-icon>diamond</mat-icon>
+  <span>{{ title }}</span>
+  <span class="spacer"></span>
+  <a mat-button routerLink="/dashboard">Dashboard</a>
+  <a mat-raised-button color="accent" routerLink="/new-product">
+    <mat-icon>add</mat-icon>
+    Add New Product
+  </a>
+</mat-toolbar>
+
+<main class="content">
+  <!-- The routed component will be displayed here -->
+  <router-outlet></router-outlet>
+</main>
+`
+
+// =================================================================================
+// File: src/app/app.component.scss
+// Purpose: Styles for the main application shell.
+// =================================================================================
+`
+.spacer {
+  flex: 1 1 auto;
+}
+
+.content {
+  padding: 24px;
+}
+`
+
+// =================================================================================
+// File: src/styles.scss
+// Purpose: Global styles and Angular Material theme setup.
+// =================================================================================
+`
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@use '@angular/material' as mat;
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat.core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue.
+$gem-erp-primary: mat.define-palette(mat.indigo-palette);
+$gem-erp-accent: mat.define-palette(mat.pink-palette, A200, A100, A400);
+
+// The warn palette is optional (defaults to red).
+$gem-erp-warn: mat.define-palette(mat.red-palette);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems (color, typography, and density).
+$gem-erp-theme: mat.define-light-theme((
+  color: (
+    primary: $gem-erp-primary,
+    accent: $gem-erp-accent,
+    warn: $gem-erp-warn,
+  )
+));
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include mat.all-component-themes($gem-erp-theme);
+
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+`
+
+// =================================================================================
+// File: src/app/features/product-creation/product-creation.component.ts
+// Purpose: The main component for our first feature: the product creation workflow.
+// This is currently a placeholder.
+// =================================================================================
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+@Component({
+  selector: 'app-product-creation',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './product-creation.component.html',
+  styleUrls: ['./product-creation.component.scss']
+})
+export class ProductCreationComponent {
+  // We will build out the logic for this component in the next steps.
+}
+
+
+// =================================================================================
+// File: src/app/features/product-creation/product-creation.component.html
+// Purpose: Placeholder HTML for the product creation feature.
+// =================================================================================
+`
+<h2>Digitize New Product</h2>
+<p>
+  The workflow for scanning a QR code, selecting the product type, and filling out the dynamic form will be built here.
+</p>
+`
+
+// =================================================================================
+// File: src/app/features/product-creation/product-creation.component.scss
+// Purpose: Placeholder styles for the product creation feature.
+// =================================================================================
+`
+/* Styles specific to the product creation component will go here */
+`

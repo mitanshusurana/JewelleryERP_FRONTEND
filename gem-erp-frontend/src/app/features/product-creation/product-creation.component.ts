@@ -4,7 +4,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatStepperModule } from '@angular/material/stepper';
-import { NgxScannerQrcodeModule, NgxScannerQrcodeComponent, ScannerQRCodeResult } from 'ngx-scanner-qrcode';
+// CORRECTED IMPORT: NgxScannerQrcodeModule is removed as it's no longer needed for standalone components.
+import { NgxScannerQrcodeComponent, ScannerQRCodeResult } from 'ngx-scanner-qrcode';
 
 // Define an enum for our product types for type safety
 export enum ProductType {
@@ -22,7 +23,7 @@ export enum ProductType {
     MatButtonModule,
     MatIconModule,
     MatStepperModule,
-    NgxScannerQrcodeModule // Import the scanner module
+    NgxScannerQrcodeComponent // CORRECTED: Import the component directly instead of the module
   ],
   templateUrl: './product-creation.component.html',
   styleUrls: ['./product-creation.component.scss']
@@ -47,12 +48,15 @@ export class ProductCreationComponent implements AfterViewInit {
 
   // This function is called by the scanner component when a QR code is successfully read
   onQrCodeScanned(result: ScannerQRCodeResult[]): void {
-    const qrCode = result[0].value;
-    this.scannedQrCode = qrCode;
-    this.qrCodeScanned = true;
-    console.log(`QR Code Scanned: ${this.scannedQrCode}`);
-    // Stop the scanner and camera once we have a result
-    this.scanner.stop();
+    // The library can sometimes emit empty results, so we check for a value.
+    if (result && result.length > 0 && result[0].value) {
+        const qrCode = result[0].value;
+        this.scannedQrCode = qrCode;
+        this.qrCodeScanned = true;
+        console.log(`QR Code Scanned: ${this.scannedQrCode}`);
+        // Stop the scanner and camera once we have a result
+        this.scanner.stop();
+    }
   }
 
   // Function to handle the selection of a product type

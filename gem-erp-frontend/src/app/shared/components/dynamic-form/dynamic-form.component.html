@@ -1,0 +1,31 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="dynamic-form">
+  <div *ngFor="let field of schema" class="form-field">
+    <ng-container [ngSwitch]="field.type">
+      <!-- Text Input -->
+      <mat-form-field *ngSwitchCase="'text'">
+        <mat-label>{{ field.label }}</mat-label>
+        <input matInput [formControlName]="field.key">
+      </mat-form-field>
+
+      <!-- Number Input -->
+      <mat-form-field *ngSwitchCase="'number'">
+        <mat-label>{{ field.label }}</mat-label>
+        <input matInput type="number" [formControlName]="field.key">
+      </mat-form-field>
+
+      <!-- Select (Dropdown) -->
+      <mat-form-field *ngSwitchCase="'select'">
+        <mat-label>{{ field.label }}</mat-label>
+        <mat-select [formControlName]="field.key">
+          <mat-option *ngFor="let option of field.options" [value]="option.value">
+            {{ option.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </ng-container>
+  </div>
+
+  <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+    Save Product
+  </button>
+</form>

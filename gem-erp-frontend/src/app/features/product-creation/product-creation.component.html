@@ -10,8 +10,6 @@
       <div class="step" *ngIf="!qrCodeScanned">
         <h3>Step 1: Scan Product QR Code</h3>
         <p>Point your device's camera at the QR code tag attached to the product.</p>
-
-        <!-- Real QR Scanner Component -->
         <div class="scanner-container">
           <ngx-scanner-qrcode #action="scanner" (event)="onQrCodeScanned($event)"></ngx-scanner-qrcode>
         </div>
@@ -31,19 +29,28 @@
             <span>Finished Jewelry</span>
           </button>
           <button mat-stroked-button (click)="selectProductType(ProductType.IdolCarving)">
-            <mat-icon>sculpture</mat-icon> <!-- Placeholder icon -->
+            <mat-icon>sculpture</mat-icon>
             <span>Idol / Carving</span>
           </button>
         </div>
       </div>
 
-      <!-- Step 3: Dynamic Form (Placeholder) -->
+      <!-- Step 3: Dynamic Form -->
       <div class="step" *ngIf="productTypeSelected">
-        <h3>Step 3: Enter Details</h3>
-        <p>
-          You have selected <strong>{{ productTypeSelected }}</strong>.
-          The dynamic form for this product type will appear here.
-        </p>
+        <h3>Step 3: Enter Details for {{ productTypeSelected | titlecase }}</h3>
+
+        <!-- Loading Spinner -->
+        <div *ngIf="isLoadingSchema" class="spinner-container">
+          <mat-spinner diameter="50"></mat-spinner>
+          <p>Loading form...</p>
+        </div>
+
+        <!-- Dynamic Form Component -->
+        <app-dynamic-form
+          *ngIf="!isLoadingSchema && formSchema.length > 0"
+          [schema]="formSchema"
+          (formSubmit)="onFormSubmitted($event)"
+        ></app-dynamic-form>
       </div>
 
     </mat-card-content>

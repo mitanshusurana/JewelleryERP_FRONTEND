@@ -1,4 +1,4 @@
-import { Component, ViewChild , AfterViewInit } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -29,10 +29,15 @@ export enum ProductType {
   templateUrl: './product-creation.component.html',
   styleUrls: ['./product-creation.component.scss']
 })
-export class ProductCreationComponent implements AfterViewInit {
-  @ViewChild('action') scanner!: NgxScannerQrcodeComponent;
+export class ProductCreationComponent {
+  // Use a setter for ViewChild. This code runs the moment the scanner component is ready.
+  @ViewChild('action')
+  set scanner(scanner: NgxScannerQrcodeComponent) {
+    if (scanner && !this.qrCodeScanned) {
+      scanner.start();
+    }
+  }
 
-  // State management
   qrCodeScanned = false;
   scannedQrCode: string | null = null;
   productTypeSelected: ProductType | null = null;
@@ -44,19 +49,12 @@ export class ProductCreationComponent implements AfterViewInit {
 
   constructor(private productService: ProductService) {}
 
-  ngAfterViewInit(): void {
-    // Start the scanner only if a code hasn't been scanned yet
-    if (!this.qrCodeScanned) {
-        this.scanner.start();
-    }
-  }
-
-  onQrCodeScanned(result: ScannerQRCodeResult[]): void {
+  // The 'scanner' parameter is passed directly from the template to ensure we're acting on the correct instance.
+  onQrCodeScanned(result: ScannerQRCodeResult[], scanner: NgxScannerQrcodeComponent): void {
     if (result && result.length > 0 && result[0].value) {
-        const qrCode = result[0].value;
-        this.scannedQrCode = qrCode;
+        this.scannedQrCode = result[0].value;
         this.qrCodeScanned = true;
-        this.scanner.stop();
+        scanner.stop(); // Stop the specific scanner instance
     }
   }
 

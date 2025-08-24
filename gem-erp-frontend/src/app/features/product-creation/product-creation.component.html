@@ -7,13 +7,33 @@
     <mat-card-content>
 
       <!-- Step 1: Scan QR Code -->
-      <div class.step *ngIf="!qrCodeScanned">
-        <!-- ... (no changes here) ... -->
+      <div class="step" *ngIf="!qrCodeScanned">
+        <h3>Step 1: Scan Product QR Code</h3>
+        <p>Point your device's camera at the QR code tag attached to the product.</p>
+        <div class="scanner-container">
+          <!-- Pass the local template variable 'action' to the event handler -->
+          <ngx-scanner-qrcode #action="scanner" (event)="onQrCodeScanned($event, action)"></ngx-scanner-qrcode>
+        </div>
       </div>
 
       <!-- Step 2: Select Product Type -->
       <div class="step" *ngIf="qrCodeScanned && !productTypeSelected">
-        <!-- ... (no changes here) ... -->
+        <h3>Step 2: Select Product Type</h3>
+        <p>You scanned QR Code: <strong>{{ scannedQrCode }}</strong>. Now, what kind of item is this?</p>
+        <div class="type-selection">
+          <button mat-stroked-button (click)="selectProductType(ProductType.LooseGemstone)">
+            <mat-icon>diamond</mat-icon>
+            <span>Loose Gemstone</span>
+          </button>
+          <button mat-stroked-button (click)="selectProductType(ProductType.FinishedJewelry)">
+            <mat-icon>ring_volume</mat-icon>
+            <span>Finished Jewelry</span>
+          </button>
+          <button mat-stroked-button (click)="selectProductType(ProductType.IdolCarving)">
+            <mat-icon>sculpture</mat-icon> <!-- Placeholder icon -->
+            <span>Idol / Carving</span>
+          </button>
+        </div>
       </div>
 
       <!-- Step 3: Dynamic Form -->

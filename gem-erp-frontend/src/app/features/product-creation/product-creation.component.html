@@ -37,7 +37,7 @@
       </div>
 
       <!-- Step 3: Dynamic Form -->
-      <div class="step" *ngIf="productTypeSelected">
+      <div class="step" *ngIf="productTypeSelected && !isSaveSuccess">
         <h3>Step 3: Enter Details for {{ productTypeSelected | titlecase }}</h3>
 
         <div *ngIf="isLoadingSchema || isSaving" class="spinner-container">
@@ -51,6 +51,17 @@
           [schema]="formSchema"
           (formSubmit)="onSaveProduct($event)">
         </app-dynamic-form>
+      </div>
+
+      <!-- Step 4: Success Message -->
+      <div *ngIf="isSaveSuccess" class="step success-message">
+        <mat-icon class="success-icon">check_circle</mat-icon>
+        <h3>Product Saved Successfully!</h3>
+        <p>The new product has been added to your inventory.</p>
+        <button mat-flat-button color="primary" (click)="resetWorkflow()">
+          <mat-icon>add</mat-icon>
+          <span>Create Another Product</span>
+        </button>
       </div>
 
     </mat-card-content>

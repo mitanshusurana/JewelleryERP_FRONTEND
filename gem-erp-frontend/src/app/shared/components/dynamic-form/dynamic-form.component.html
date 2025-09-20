@@ -22,6 +22,16 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
+
+      <!-- Media Uploader -->
+      <div *ngSwitchCase="'media'" class="media-field">
+        <label class="mat-label">{{ field.label }}</label>
+        <app-media-uploader (fileSelected)="onFileSelected($event, field.key)"></app-media-uploader>
+        <!-- Basic validation message -->
+        <mat-error *ngIf="form.get(field.key)?.hasError('required') && form.get(field.key)?.touched">
+          This field is required.
+        </mat-error>
+      </div>
     </ng-container>
   </div>
 

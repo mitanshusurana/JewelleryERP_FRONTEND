@@ -43,6 +43,7 @@ export class ProductCreationComponent {
   productTypeSelected: ProductType | null = null;
   isLoadingSchema = false;
   isSaving = false;
+  isSaveSuccess = false; // To show a success message
   formSchema: FormField[] = [];
 
   ProductType = ProductType;
@@ -69,26 +70,50 @@ export class ProductCreationComponent {
   }
 
   onSaveProduct(formData: any): void {
-    console.log('Form Submitted! Preparing to save data.');
     this.isSaving = true;
+    const { image, ...attributes } = formData;
 
-    const payload: CreateProductPayload = {
-      qrCodeId: this.scannedQrCode!,
-      productType: this.productTypeSelected!,
-      attributes: formData
-    };
+    // In a real application, you would handle the file upload to a service like S3
+    // and get back a URL. Here, we simulate this process.
+    this.simulateUpload(image).subscribe(imageUrl => {
+      const payload: CreateProductPayload = {
+        qrCodeId: this.scannedQrCode!,
+        productType: this.productTypeSelected!,
+        attributes: { ...attributes, imageUrl } // Add the image URL to the payload
+      };
 
-    console.log('Final Product Data:', payload);
+      console.log('Final Product Data:', payload);
 
-    this.productService.createProduct(payload).subscribe({
-      next: (response) => {
-        console.log('Product saved successfully!', response);
-        this.isSaving = false;
-      },
-      error: (err) => {
-        console.error('Error saving product:', err);
-        this.isSaving = false;
-      }
+      this.productService.createProduct(payload).subscribe({
+        next: (response) => {
+          console.log('Product saved successfully!', response);
+          this.isSaving = false;
+          this.isSaveSuccess = true;
+        },
+        error: (err) => {
+          console.error('Error saving product:', err);
+          this.isSaving = false;
+        }
+      });
     });
+  }
+
+  private simulateUpload(file: File): Observable<string> {
+    // Simulate a 2-second upload delay and return a fake URL
+    console.log(`Simulating upload for file: ${file.name}`);
+    return of(`https://fake-s3-bucket.com/${file.name}-${new Date().getTime()}`).pipe(
+      delay(2000)
+    );
+  }
+
+  // Resets the entire workflow to start over
+  resetWorkflow(): void {
+    this.qrCodeScanned = false;
+    this.scannedQrCode = null;
+    this.productTypeSelected = null;
+    this.formSchema = [];
+    this.isSaveSuccess = false;
+    // The ViewChild setter will automatically restart the scanner
+    // when qrCodeScanned becomes false and the component re-renders.
   }
 }

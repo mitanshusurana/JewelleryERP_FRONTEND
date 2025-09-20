@@ -14,7 +14,7 @@ export interface FormFieldOption {
 export interface FormField {
   key: string;
   label: string;
-  type: 'text' | 'number' | 'select';
+  type: 'text' | 'number' | 'select' | 'media';
   required: boolean;
   options?: FormFieldOption[];
 }
@@ -40,10 +40,10 @@ export class ProductService {
   }
 
   getFormSchema(productType: ProductType): Observable<FormField[]> {
-    // In a real app, this would also be an HTTP call
+    // In a real app, this would be an HTTP call to fetch the schema from the backend.
+    // For now, we are returning mock data.
     // return this.http.get<FormField[]>(`${this.apiUrl}/schemas/${productType}`);
 
-    // Mock data for now
     let mockSchema: FormField[] = [];
     if (productType === ProductType.LooseGemstone) {
       mockSchema = [
@@ -55,6 +55,7 @@ export class ProductService {
             { value: 'IF', label: 'Internally Flawless (IF)' }, { value: 'VVS1', label: 'VVS1' }, { value: 'VVS2', label: 'VVS2' }, { value: 'VS1', label: 'VS1' }
         ]},
         { key: 'origin', label: 'Origin', type: 'text', required: false },
+        { key: 'image', label: 'Upload Image', type: 'media', required: true },
       ];
     } else if (productType === ProductType.FinishedJewelry) {
         mockSchema = [
@@ -62,6 +63,14 @@ export class ProductService {
                 { value: 'GOLD', label: 'Gold' }, { value: 'SILVER', label: 'Silver' }, { value: 'PLATINUM', label: 'Platinum' }
             ]},
             { key: 'gross_weight', label: 'Gross Weight (grams)', type: 'number', required: true },
+            { key: 'image', label: 'Upload Image', type: 'media', required: true },
+        ];
+    } else if (productType === ProductType.IdolCarving) {
+        mockSchema = [
+            { key: 'material', label: 'Material', type: 'text', required: true },
+            { key: 'height', label: 'Height (cm)', type: 'number', required: true },
+            { key: 'weight', label: 'Weight (grams)', type: 'number', required: true },
+            { key: 'image', label: 'Upload Image', type: 'media', required: true },
         ];
     }
     return of(mockSchema).pipe(delay(500));
